@@ -2,7 +2,7 @@
 **Embedding layer**을 통해 임베딩 된 네이버 영화 리뷰 데이터를 **BiLSTM**을 통해 긍정, 부정을 분류해 주는 프로젝트
 
 ## 1. 모델 구조도
-![alt text](https://github.com/MSWon/Sentimental-Analysis/blob/master/pic/pic_1.PNG "Model")
+![alt text](https://github.com/MSWon/Sentimental-Analysis-ver2/blob/master/images/model.png "Model")
 
 1. 정답이 있는 네이버 영화 리뷰 데이터 15만건([박은정님 제공](https://github.com/e9t/nsmc))에 대해서 **품사 태깅**
 
