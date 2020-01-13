@@ -78,7 +78,7 @@ class Model():
                           self.seq_len: self.test_len}          
         
         print("start training")
-        modelpath = "./sent_model/"
+        modelpath = "./model/"
         modelName = "sentimental.ckpt"
         saver = tf.train.Saver()  
         best_acc = 0.
