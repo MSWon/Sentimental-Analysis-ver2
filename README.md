@@ -39,7 +39,7 @@ $ python train.py --batch_size 128 --word_dim 512 --hidden_dim 512 --num_layers 
 - Doc2Vec, Term-existance Naive Bayes에 의한 성능 보다 뛰어남([박은정](https://www.slideshare.net/lucypark/nltk-gensim))
 - test_example.py를 통해 직접 입력한 문장에 성능 확인
 ```
-$ test_example.py
+$ python test_example.py
 
 문장을 입력하세요: 재밌던데!
 긍정입니다
