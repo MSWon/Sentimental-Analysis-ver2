@@ -30,7 +30,7 @@ $ git clone https://github.com/MSWon/Sentimental-Analysis-ver2.git
 ```
 **2. Training with user settings**
 ```
-$ python train.py --batch_size 128 --word_dim 512 --hidden_dim 512 --num_layers 3 --training_epochs 10
+$ python train.py --batch_size 128 --word_dim 512 --hidden_dim 512 --num_layers 2 --training_epochs 5
 ```
 
 ## 5. 결과
