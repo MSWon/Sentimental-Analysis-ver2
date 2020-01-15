@@ -38,6 +38,8 @@ $ python train.py --batch_size 128 --word_dim 512 --hidden_dim 512 --num_layers 
 - Test accuracy : **85.32%**
 - Doc2Vec, Term-existance Naive Bayes에 의한 성능 보다 뛰어남([박은정](https://www.slideshare.net/lucypark/nltk-gensim))
 - test_example.py를 통해 직접 입력한 문장에 성능 확인
+
+Pre-trained 모델 다운로드
 ```
 $ sh download_model.sh
 ```
