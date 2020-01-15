@@ -64,8 +64,9 @@ class Model():
 
         ## Build graph
         self.build_model(isTrain)
-        self.build_optimizer(num_train_steps)
-        self.get_accuracy()
+        if isTrain:
+            self.build_optimizer(num_train_steps)
+            self.get_accuracy()
         
     def train(self):
         num_train_batch = int(self.train_size / self.batch_size) + 1
