@@ -43,7 +43,7 @@ Pre-trained 모델 다운로드
 ```
 $ sh download_model.sh
 ```
-직접 문장을 입력하여 
+직접 문장을 입력하여 테스트
 ```
 $ python test_example.py
 
