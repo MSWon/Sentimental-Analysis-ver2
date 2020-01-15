@@ -39,29 +39,29 @@ class Model():
         self.label = tf.placeholder(tf.int32, shape = [None], name = 'label')
         self.seq_len = tf.placeholder(tf.int32, shape = [None], name = 'seq_len')
         self.dropout = tf.placeholder(tf.float32, shape = (), name = 'dropout')
-        
-        ## Read file
-        self.train_text, self.train_len, self.train_score = self.prepro.read_data(self.path + '/ratings_train.txt') 
-        self.test_text, self.test_len, self.test_score = self.prepro.read_data(self.path + '/ratings_test.txt') 
-        self.train_size, self.test_size = len(self.train_score), len(self.test_score)
-        num_train_steps = int(self.train_size / self.batch_size) + 1
-        
-        train_dataset = tf.data.Dataset.from_tensor_slices((self.word_idx, self.label, self.seq_len))
-        train_dataset = train_dataset.shuffle(self.train_size)
-        train_dataset = train_dataset.batch(self.batch_size)
-        train_dataset = train_dataset.repeat()
-        
-        test_dataset = tf.data.Dataset.from_tensor_slices((self.word_idx, self.label, self.seq_len))
-        test_dataset = test_dataset.batch(self.batch_size)
-        test_dataset = test_dataset.repeat()
-        
-        iters = tf.data.Iterator.from_structure(train_dataset.output_types, train_dataset.output_shapes)
-        self.iter_word_idx, self.iter_label, self.iter_seq_len = iters.get_next()
+        if isTrain:
+            ## Read file
+            self.train_text, self.train_len, self.train_score = self.prepro.read_data(self.path + '/ratings_train.txt') 
+            self.test_text, self.test_len, self.test_score = self.prepro.read_data(self.path + '/ratings_test.txt') 
+            self.train_size, self.test_size = len(self.train_score), len(self.test_score)
+            num_train_steps = int(self.train_size / self.batch_size) + 1
 
-        ## Create the initialisation operations
-        self.train_init_op = iters.make_initializer(train_dataset)
-        self.test_init_op = iters.make_initializer(test_dataset)
-        
+            train_dataset = tf.data.Dataset.from_tensor_slices((self.word_idx, self.label, self.seq_len))
+            train_dataset = train_dataset.shuffle(self.train_size)
+            train_dataset = train_dataset.batch(self.batch_size)
+            train_dataset = train_dataset.repeat()
+
+            test_dataset = tf.data.Dataset.from_tensor_slices((self.word_idx, self.label, self.seq_len))
+            test_dataset = test_dataset.batch(self.batch_size)
+            test_dataset = test_dataset.repeat()
+
+            iters = tf.data.Iterator.from_structure(train_dataset.output_types, train_dataset.output_shapes)
+            self.iter_word_idx, self.iter_label, self.iter_seq_len = iters.get_next()
+
+            ## Create the initialisation operations
+            self.train_init_op = iters.make_initializer(train_dataset)
+            self.test_init_op = iters.make_initializer(test_dataset)
+
         ## Build graph
         self.build_model(isTrain)
         self.build_optimizer(num_train_steps)
