@@ -5,33 +5,44 @@ Created on Mon Aug  5 22:10:30 2019
 @author: jbk48
 """
 
-from model import Model
 import tensorflow as tf
+import preprocess
+from model import Model
 
+max_word_len = 100
+word_dim = 512
+hidden_dim = 512
+num_layers = 2
+max_vocab_size = 100000 
+corpuspath = "Movie_rating_data"
+modelpath = "./model/"
+modelName = "sentimental.ckpt"
+
+def infer_example(input_sent, graph, sess):
+    tokenize_words = ['/'.join(t) for t in prepro.twitter.pos(input_sent)]
+    input_idx = [prepro.sent2idx(tokenize_words)]
+    input_len = [len(input_idx)]
+    pred = tf.cast(tf.argmax(infer_fn, 1), tf.int32)
+    score = sess.run(pred, feed_dict={graph.word_inputs : input_idx,
+                                      graph.word_len : input_len})
+    if(score == 1):
+        print("긍정입니다")
+    else:
+        print("부정입니다")    
+   
 if __name__ == '__main__':
+    prepro = preprocess.Preprocess(word_dim=word_dim, max_vocab_size=max_vocab_size, path=corpuspath)
+    word_embedding, clear_padding, word2idx, idx2word = prepro.build_embedding()
+    infer_graph = Model(word_embedding, max_word_len)
+    infer_fn = infer_graph.build_model(hidden_dim, num_layers, None, False)
+    
+    sess = tf.Session()
+    sess.run(tf.global_variables_initializer())
 
-    flags = tf.app.flags
-    FLAGS = flags.FLAGS
+    saver = tf.train.Saver()  
+    saver.restore(sess, modelpath + modelName)
     
-    ## Model parameter
-    flags.DEFINE_integer('batch_size', 1, 'number of batch size')
-    flags.DEFINE_integer('word_dim', 512, 'dimension of word vector')
-    flags.DEFINE_integer('hidden_dim', 512, 'dimension of model hidden nodes')
-    flags.DEFINE_integer('num_layers', 2, 'number of LSTM layers')
-    flags.DEFINE_integer('max_vocab_size', 100000, 'max vocabulary size')
-    flags.DEFINE_integer('max_word_len', 100, 'max length of words')
-    flags.DEFINE_float('learning_rate', 0.0001, 'initial learning rate')
-    flags.DEFINE_string('path', 'Movie_rating_data', 'directory of data file')
-    flags.DEFINE_integer('training_epochs', 5, 'number of training epochs')
+    while(1):
+        input_words = input("문장을 입력하세요: ")
+        infer_example(input_words, infer_graph, sess)
     
-    print('========================')
-    for key in FLAGS.__flags.keys():
-        print('{} : {}'.format(key, getattr(FLAGS, key)))
-    print('========================')
-    ## Build model
-    model = Model(FLAGS.batch_size, FLAGS.word_dim, FLAGS.hidden_dim, FLAGS.num_layers, FLAGS.max_vocab_size,
-                  FLAGS.max_word_len, FLAGS.learning_rate, FLAGS.training_epochs, FLAGS.path, False)
-    
-    ## Test model
-
-    model.test_example()
