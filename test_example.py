@@ -19,7 +19,14 @@ modelpath = "./model/"
 modelName = "sentimental.ckpt"
 
 def infer_example(input_sent, graph, sess):
-    tokenize_words = ['/'.join(t) for t in prepro.twitter.pos(input_sent)]
+    tokenize_words = []
+    for t in prepro.twitter.pos(input_sent):
+        if t[1] == "URL":
+            tokenize_words.append("<URL>")
+        elif t[1] == "Number":
+            tokenize_words.append("<NUM>")
+        else:
+            tokenize_words.append('/'.join(t))
     input_idx = [prepro.sent2idx(tokenize_words)]
     input_len = [len(input_idx)]
     pred = tf.cast(tf.argmax(infer_fn, 1), tf.int32)

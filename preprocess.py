@@ -32,7 +32,14 @@ class Preprocess():
             with open(filename, 'r',encoding='utf-8') as f:
                 for line in f.read().splitlines():
                     data = line.split('\t')
-                    pos_tag = ['/'.join(t) for t in self.twitter.pos(data[1])]
+                    pos_tag = []
+                    for t in self.twitter.pos(data[1]):
+                        if t[1] == "URL":
+                            pos_tag.append("<URL>")
+                        elif t[1] == "Number":
+                            pos_tag.append("<NUM>")
+                        else:
+                            pos_tag.append('/'.join(t))
                     text.append(self.sent2idx(pos_tag))
                     seq_len.append(len(pos_tag))
                     score.append(data[2])
@@ -67,8 +74,14 @@ class Preprocess():
             with open(self.path + '/ratings_train.txt', 'r',encoding='utf-8') as f:
                 for line in f.read().splitlines():
                     data = line.split('\t')
-                    text = ['/'.join(t) for t in self.twitter.pos(data[1])]
-               
+                    text = []
+                    for t in self.twitter.pos(data[1]):
+                        if t[1] == "URL":
+                            text.append("<URL>")
+                        elif t[1] == "Number":
+                            text.append("<NUM>")
+                        else:
+                            text.append('/'.join(t))
                     for word in text:
                         if(word not in word_vocab):
                             word_vocab[word] = 1
@@ -78,7 +91,7 @@ class Preprocess():
             word_freq = sorted(word_vocab.items(), key = lambda x : x[1], reverse = True)
             word_freq_ = word_freq[:self.max_vocab_size] ## Top freq vocabs (100K for default)   
             
-            self.word2idx = {"<PAD>":0, "<UNK>":1} ## predict as <UNK> for OOV word            
+            self.word2idx = {"<PAD>":0, "<UNK>":1, "<NUM>":2, "<URL>":3} ## predict as <UNK> for OOV word
             for idx in range(len(word_freq_)):
                 self.word2idx[word_freq_[idx][0]] = len(self.word2idx)
             
