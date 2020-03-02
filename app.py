@@ -27,6 +27,7 @@ def infer_example(input_sent, graph, sess):
     pred = tf.cast(tf.argmax(infer_fn, 1), tf.int32)
     score = sess.run(pred, feed_dict={graph.word_inputs: input_idx,
                                       graph.word_len: input_len})
+
     if (score == 1):
         return "긍정입니다"
     else:
@@ -38,7 +39,7 @@ def index():
     if request.method == 'POST':
         sentence = request.form["sentence"]
         result = infer_example(sentence, infer_graph, sess)
-        return render_template("index.html", result=result, input_sentence=sentence)
+        return render_template("index.html", result=result, input_sent=sentence)
     return render_template("index.html")
 
 if __name__ == '__main__':

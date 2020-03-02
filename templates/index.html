@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
+   <head>
+       <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+   </head>
    <body>
+      <div id="sentiment">
+         <span>영화 감성 분석기</span></br>
 
-      <form action = "http://172.30.1.6:5000" method = "post">
-         <p>문장을 입력하시오</p>
-         <p><input type = "text" name = "sentence" /></p>
-         <p><input type = "submit" value = "submit" /></p>
-      </form>
-	<p>{{input_sentence}}</p>
-	<p>{{result}}</p>
-	
+         <form action = "http://172.30.1.3:5000" method = "post">
+            <p><input type = "text" name = "sentence" placeholder="문장을 입력하세요"/></p>
+            <p><input type = "submit" value = "제출"/></p>
+         </form>
+
+         <p><div id="input_sent">입력문장: {{input_sent}}</div></p>
+         <p><div id="result">결과: {{result}}</div></p>
+      </div>
    </body>
 </html>
